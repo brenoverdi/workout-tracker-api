@@ -1,0 +1,75 @@
+service: workout-tracker-api
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: ${env:AWS_REGION, 'us-east-1'}
+  stage: ${env:STAGE, 'dev'}
+  memorySize: 512
+  timeout: 30
+  environment:
+    NODE_ENV: ${env:NODE_ENV}
+    DATABASE_HOST: ${env:DATABASE_HOST}
+    DATABASE_PORT: ${env:DATABASE_PORT}
+    DATABASE_USER: ${env:DATABASE_USER}
+    DATABASE_PASSWORD: ${env:DATABASE_PASSWORD}
+    DATABASE_NAME: ${env:DATABASE_NAME}
+    REDIS_HOST: ${env:REDIS_HOST}
+    REDIS_PORT: ${env:REDIS_PORT}
+    REDIS_PASSWORD: ${env:REDIS_PASSWORD}
+    ELASTICSEARCH_NODE: ${env:ELASTICSEARCH_NODE}
+    ELASTICSEARCH_USERNAME: ${env:ELASTICSEARCH_USERNAME}
+    ELASTICSEARCH_PASSWORD: ${env:ELASTICSEARCH_PASSWORD}
+    AWS_REGION: ${env:AWS_REGION}
+    S3_BUCKET_NAME: ${env:S3_BUCKET_NAME}
+    GROQ_API_KEY: ${env:GROQ_API_KEY}
+    JWT_SECRET: ${env:JWT_SECRET}
+    JWT_EXPIRES_IN: ${env:JWT_EXPIRES_IN}
+    JWT_REFRESH_SECRET: ${env:JWT_REFRESH_SECRET}
+    JWT_REFRESH_EXPIRES_IN: ${env:JWT_REFRESH_EXPIRES_IN}
+  
+  # VPC configuration (uncomment when you have VPC set up for RDS/Redis/Elasticsearch)
+  # vpc:
+  #   securityGroupIds:
+  #     - sg-xxxxxxxxx
+  #   subnetIds:
+  #     - subnet-xxxxxxxxx
+  #     - subnet-xxxxxxxxx
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - s3:GetObject
+            - s3:PutObject
+            - s3:DeleteObject
+          Resource: 
+            - arn:aws:s3:::${env:S3_BUCKET_NAME}/*
+
+functions:
+  api:
+    handler: dist/main.handler
+    events:
+      - http:
+          method: ANY
+          path: /
+          cors: true
+      - http:
+          method: ANY
+          path: /{proxy+}
+          cors: true
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
+  - serverless-dotenv-plugin
+
+custom:
+  serverless-offline:
+    httpPort: 3000
+    lambdaPort: 3002
+  dotenv:
+    path: .env
