@@ -1,247 +1,125 @@
 # Workout Tracker API
 
-A comprehensive workout tracking API built with NestJS, TypeORM, and designed for serverless deployment on AWS Lambda.
+A serverless-ready workout tracking API built with NestJS and TypeORM.
 
-## Features
+## Features & Tech Stack
 
-- **User Authentication**: JWT-based authentication with signup, login, and profile management
-- **Exercise Management**: Catalog of exercises with custom exercise creation
-- **Workout Programs**: Create and manage workout programs with schedules
-- **Session Logging**: Track workout sessions with sets, reps, weights, and RPE
-- **Progress Analytics**: View progress over time with statistics and graphs
-- **Search & History**: Powerful search using Elasticsearch
-- **AI Coach**: AI-powered workout plan generation and recommendations using Groq
-- **File Storage**: Upload progress photos and documents to S3
-- **Caching**: Redis caching for improved performance
-
-## Tech Stack
-
-- **Framework**: NestJS
-- **Database**: PostgreSQL with TypeORM
-- **Caching**: Redis
+- **Framework**: NestJS (Serverless Framework for AWS Lambda)
+- **Database**: PostgreSQL (TypeORM)
 - **Search**: Elasticsearch
-- **File Storage**: AWS S3
-- **AI**: Groq API
-- **Deployment**: AWS Lambda with Serverless Framework
+- **Caching**: Redis
+- **Storage**: AWS S3
+- **AI**: Groq API for workout recommendations
+
+## Quick Start
+
+### Prerequisites
+- Node.js 20+
+- PostgreSQL, Redis, Elasticsearch
+- AWS S3 Bucket & Groq API Key
+
+### Installation
+
+1. Copy env file: `cp .env.example .env`
+2. Configure `.env` with your credentials.
+3. Install dependencies: `npm install`
+
+### Running Locally
+
+```bash
+# Development
+npm run start:dev
+
+# Production Build
+npm run build && npm run start:prod
+
+# Serverless Offline
+npm run serverless:offline
+```
+
+### Migrations
+
+```bash
+# Generate
+npm run migration:generate -- src/migrations/Name
+
+# Run
+npm run migration:run
+```
+
+## Architecture
+
+![System Architecture](diagrams/workout-tracker-architecture.drawio.png)
+
+![Database Schema](diagrams/workout-tracker-db.drawio.png)
 
 ## Project Structure
 
 ```
 src/
-├── modules/          # Feature modules
-│   ├── user/        # User authentication and profile
-│   │   ├── use-cases/    # Business logic services
-│   │   ├── tests/        # Unit tests
-│   │   ├── model.ts      # TypeORM entity
-│   │   ├── controller.ts # HTTP endpoints
-│   │   └── module.ts     # NestJS module
-│   ├── exercise/    # Exercise catalog
-│   ├── program/     # Workout programs
-│   ├── session/     # Workout sessions
-│   ├── analytics/   # Progress tracking
-│   ├── search/      # Elasticsearch integration
-│   ├── ai-coach/    # AI recommendations
-│   └── files/       # File management
-├── services/        # Shared services
-│   ├── redis.service.ts
-│   ├── elasticsearch.service.ts
-│   ├── s3.service.ts
-│   ├── groq.service.ts
-│   └── logger.service.ts
-├── middlewares/     # Global middlewares
-│   ├── logging.middleware.ts
-│   └── error.middleware.ts
-├── config/          # Configuration files
-│   ├── env.config.ts
-│   ├── database.config.ts
-│   ├── redis.config.ts
-│   ├── elasticsearch.config.ts
-│   └── aws.config.ts
-├── utils/           # Utility functions
-│   ├── response.util.ts
-│   ├── date.util.ts
-│   └── validation.util.ts
-├── app.module.ts    # Root module
-└── main.ts          # Application entry point
-```
-
-## Prerequisites
-
-- Node.js 20.x or higher
-- PostgreSQL database
-- Redis server
-- Elasticsearch cluster
-- AWS account with S3 access
-- Groq API key
-
-## Installation
-
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd workout-tracker-api
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Set up environment variables:
-```bash
-cp .env.example .env
-```
-
-Edit `.env` and fill in your configuration:
-- Database credentials (PostgreSQL)
-- Redis connection details
-- Elasticsearch endpoint
-- AWS credentials and S3 bucket name
-- Groq API key
-- JWT secrets
-
-## Running the Application
-
-### Development Mode
-
-```bash
-npm run start:dev
-```
-
-The API will be available at `http://localhost:3000/api/v1`
-
-### Production Mode
-
-```bash
-npm run build
-npm run start:prod
-```
-
-### Serverless Offline (Local Lambda Simulation)
-
-```bash
-npm run serverless:offline
-```
-
-## Database Migrations
-
-Generate a new migration:
-```bash
-npm run migration:generate -- src/migrations/MigrationName
-```
-
-Run migrations:
-```bash
-npm run migration:run
-```
-
-Revert last migration:
-```bash
-npm run migration:revert
-```
-
-## Deployment
-
-### Deploy to AWS Lambda
-
-Development:
-```bash
-npm run deploy:dev
-```
-
-Production:
-```bash
-npm run deploy:prod
+├── modules/          # Feature modules (User, Exercise, Program, Session, etc.)
+├── services/         # Shared services (Redis, S3, Groq, Elasticsearch)
+├── middlewares/      # Global middlewares
+├── config/           # Configuration files
+├── utils/            # Utility functions
+└── app.module.ts     # Root module
 ```
 
 ## API Endpoints
 
 ### Authentication
+- `POST /api/v1/auth/signup` - Register
+- `POST /api/v1/auth/login` - Login
+- `GET /api/v1/auth/me` - Get profile
+- `PUT /api/v1/auth/profile` - Update profile
 
-- `POST /api/v1/auth/signup` - Register a new user
-- `POST /api/v1/auth/login` - Login and get JWT token
-- `GET /api/v1/auth/me` - Get current user profile (protected)
-- `PUT /api/v1/auth/profile` - Update user profile (protected)
+### Exercises
+- `GET /api/v1/exercises` - List exercises
+- `POST /api/v1/exercises` - Create exercise
+- `GET /api/v1/exercises/:id` - Get details
+- `PUT /api/v1/exercises/:id` - Update
+- `DELETE /api/v1/exercises/:id` - Delete
 
-### Other Modules
+### Programs
+- `GET /api/v1/programs` - List programs
+- `POST /api/v1/programs` - Create program
+- `GET /api/v1/programs/:id` - Get details
+- `PUT /api/v1/programs/:id` - Update
+- `DELETE /api/v1/programs/:id` - Delete
+- `POST /api/v1/programs/:id/exercises` - Add exercise
+- `PUT /api/v1/programs/:id/exercises/:exerciseId` - Update exercise details
+- `DELETE /api/v1/programs/:id/exercises/:exerciseId` - Remove exercise
 
-Additional endpoints will be available as you implement other modules (Exercise, Program, Session, Analytics, etc.)
+### Sessions
+- `GET /api/v1/sessions` - History
+- `POST /api/v1/sessions` - Start session
+- `GET /api/v1/sessions/latest` - Latest session
+- `GET /api/v1/sessions/:id` - Details
+- `DELETE /api/v1/sessions/:id` - Delete
+- `POST /api/v1/sessions/:id/complete` - Finish session
+- `POST /api/v1/sessions/:id/exercises` - Add exercise
+- `POST /api/v1/sessions/:id/sets` - Add set
+- `PUT /api/v1/sessions/sets/:setId` - Update set
+- `DELETE /api/v1/sessions/sets/:setId` - Delete set
 
-## Testing
+### Analytics
+- `GET /api/v1/analytics/progress`
+- `GET /api/v1/analytics/muscle-distribution`
+- `GET /api/v1/analytics/stats`
 
-Run unit tests:
-```bash
-npm test
-```
+### AI Coach
+- `POST /api/v1/ai-coach/generate-workout`
+- `POST /api/v1/ai-coach/analyze`
 
-Run tests in watch mode:
-```bash
-npm run test:watch
-```
+### Dashboard
+- `GET /api/v1/dashboard`
 
-Run test coverage:
-```bash
-npm run test:cov
-```
+### Search & Tutorials
+- `GET /api/v1/search`
+- `GET /api/v1/search/suggestions`
+- `GET /api/v1/tutorials/search`
+- `GET /api/v1/tutorials/recommended`
 
-Run e2e tests:
-```bash
-npm run test:e2e
-```
-
-## Environment Variables
-
-See `.env.example` for all required environment variables.
-
-Key variables:
-- `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_USER`, `DATABASE_PASSWORD`, `DATABASE_NAME`
-- `REDIS_HOST`, `REDIS_PORT`, `REDIS_PASSWORD`
-- `ELASTICSEARCH_NODE`, `ELASTICSEARCH_USERNAME`, `ELASTICSEARCH_PASSWORD`
-- `AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `S3_BUCKET_NAME`
-- `GROQ_API_KEY`
-- `JWT_SECRET`, `JWT_REFRESH_SECRET`
-
-## Architecture Highlights
-
-### Custom Module Pattern
-
-Each module follows a consistent structure:
-- **model.ts**: TypeORM entity definition
-- **controller.ts**: NestJS controller with HTTP endpoints
-- **module.ts**: NestJS module configuration
-- **use-cases/**: Injectable services containing business logic
-- **tests/**: Unit and integration tests
-
-### Services Layer
-
-Global services are available throughout the application:
-- **RedisService**: Caching operations
-- **ElasticsearchService**: Search and analytics
-- **S3Service**: File upload/download
-- **GroqService**: AI-powered features
-- **LoggerService**: Structured logging
-
-### Middleware
-
-- **LoggingMiddleware**: HTTP request/response logging
-- **GlobalExceptionFilter**: Standardized error handling
-
-## Next Steps
-
-To continue building the application:
-
-1. **Implement remaining modules**: Exercise, Program, Session, Analytics, Search, AI Coach, Files
-2. **Add comprehensive tests**: Unit tests for all use-cases
-3. **Set up CI/CD**: Automated testing and deployment
-4. **Add API documentation**: Swagger/OpenAPI documentation
-5. **Implement rate limiting**: Protect API endpoints
-6. **Add monitoring**: CloudWatch logs and metrics
-7. **Database migrations**: Create migrations for all entities
-
-## License
-
-UNLICENSED
-
-## Author
-
-Your Name
+### Files
+- `POST /api/v1/files/upload`
+- `GET /api/v1/files/signed-url`

@@ -29,8 +29,11 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ nullable: true })
-  name: string;
+  @Column({ name: 'firstname', nullable: true })
+  firstName: string;
+
+  @Column({ name: 'surname', nullable: true })
+  surname: string;
 
   @Column({ type: 'int', nullable: true })
   age: number;
@@ -49,21 +52,28 @@ export class User {
   weight: number; // in kg
 
   @Column({
+    name: 'experience_level',
     type: 'enum',
     enum: ExperienceLevel,
     default: ExperienceLevel.BEGINNER,
   })
   experienceLevel: ExperienceLevel;
 
-  @Column({ default: true })
+  @Column({ name: 'frequency_exercise', type: 'int', nullable: true })
+  frequencyExercise: number;
+
+  @Column({ name: 'is_active', default: true })
   isActive: boolean;
 
-  @Column({ nullable: true })
+  @Column({ name: 'refresh_token', nullable: true })
   refreshToken: string;
 
-  @CreateDateColumn()
+  @Column({ name: 'last_login_time', type: 'timestamp', nullable: true })
+  lastLoginTime: Date;
+
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 }

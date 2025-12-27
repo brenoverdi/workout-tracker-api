@@ -7,8 +7,8 @@ export class ElasticsearchService implements OnModuleInit {
   private client: Client;
 
   async onModuleInit() {
-    this.client = new Client(elasticsearchConfig);
-    
+    this.client = new Client(elasticsearchConfig as any);
+
     try {
       await this.client.ping();
       console.log('Elasticsearch connected successfully');
@@ -23,7 +23,7 @@ export class ElasticsearchService implements OnModuleInit {
 
   async createIndex(index: string, mappings: any): Promise<void> {
     const exists = await this.client.indices.exists({ index });
-    
+
     if (!exists) {
       await this.client.indices.create({
         index,
@@ -32,6 +32,14 @@ export class ElasticsearchService implements OnModuleInit {
         },
       });
       console.log(`Index ${index} created successfully`);
+    }
+  }
+
+  async deleteIndex(index: string): Promise<void> {
+    const exists = await this.client.indices.exists({ index });
+    if (exists) {
+      await this.client.indices.delete({ index });
+      console.log(`Index ${index} deleted successfully`);
     }
   }
 
@@ -44,7 +52,11 @@ export class ElasticsearchService implements OnModuleInit {
     });
   }
 
-  async updateDocument(index: string, id: string, document: any): Promise<void> {
+  async updateDocument(
+    index: string,
+    id: string,
+    document: any,
+  ): Promise<void> {
     await this.client.update({
       index,
       id,
@@ -81,7 +93,7 @@ export class ElasticsearchService implements OnModuleInit {
       body: {
         size: 0,
         aggs: aggregations,
-      },
+      } as any,
     });
 
     return result.aggregations;

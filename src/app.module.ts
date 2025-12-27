@@ -16,6 +16,17 @@ import { LoggingMiddleware } from './middlewares/logging.middleware';
 
 // Modules
 import { UserModule } from './modules/user/module';
+import { ExerciseModule } from './modules/exercise/module';
+import { ProgramModule } from './modules/program/module';
+import { SessionModule } from './modules/session/module';
+import { AnalyticsModule } from './modules/analytics/module';
+import { DashboardModule } from './modules/dashboard/module';
+import { TutorialModule } from './modules/tutorial/module';
+import { SearchModule } from './modules/search/module';
+import { AiCoachModule } from './modules/ai-coach/module';
+import { FilesModule } from './modules/files/module';
+import { SystemLogsModule } from './modules/system-logs/module';
+import { SeedModule } from './database/seed.module';
 
 @Module({
   imports: [
@@ -25,14 +36,17 @@ import { UserModule } from './modules/user/module';
     }),
     TypeOrmModule.forRoot(databaseConfig),
     UserModule,
-    // Add other modules here as you create them:
-    // ExerciseModule,
-    // ProgramModule,
-    // SessionModule,
-    // AnalyticsModule,
-    // SearchModule,
-    // AiCoachModule,
-    // FilesModule,
+    ExerciseModule,
+    ProgramModule,
+    SessionModule,
+    AnalyticsModule,
+    DashboardModule,
+    TutorialModule,
+    SearchModule,
+    AiCoachModule,
+    FilesModule,
+    SystemLogsModule,
+    SeedModule,
   ],
   providers: [
     RedisService,

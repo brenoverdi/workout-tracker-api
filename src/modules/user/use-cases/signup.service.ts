@@ -29,7 +29,8 @@ export class SignupService {
     const user = this.userRepository.create({
       email: signupDto.email,
       password: hashedPassword,
-      name: signupDto.name,
+      firstName: signupDto.firstName,
+      surname: signupDto.surname,
     });
 
     const savedUser = await this.userRepository.save(user);

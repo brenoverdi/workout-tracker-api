@@ -1,7 +1,18 @@
-import { format, parseISO, startOfDay, endOfDay, subDays, subWeeks, subMonths } from 'date-fns';
+import {
+  format,
+  parseISO,
+  startOfDay,
+  endOfDay,
+  subDays,
+  subWeeks,
+  subMonths,
+} from 'date-fns';
 
 export class DateUtil {
-  static formatDate(date: Date | string, formatStr: string = 'yyyy-MM-dd'): string {
+  static formatDate(
+    date: Date | string,
+    formatStr: string = 'yyyy-MM-dd',
+  ): string {
     const dateObj = typeof date === 'string' ? parseISO(date) : date;
     return format(dateObj, formatStr);
   }

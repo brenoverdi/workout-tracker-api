@@ -19,7 +19,7 @@ async function bootstrapServer(): Promise<Handler> {
     );
 
     const logger = nestApp.get(LoggerService);
-    
+
     nestApp.useGlobalPipes(
       new ValidationPipe({
         whitelist: true,
@@ -40,7 +40,11 @@ async function bootstrapServer(): Promise<Handler> {
   return cachedServer;
 }
 
-export const handler: Handler = async (event: any, context: Context, callback: any) => {
+export const handler: Handler = async (
+  event: any,
+  context: Context,
+  callback: any,
+) => {
   const server = await bootstrapServer();
   return server(event, context, callback);
 };

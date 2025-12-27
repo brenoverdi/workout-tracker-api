@@ -18,18 +18,13 @@ const envConfig = config();
     PassportModule,
     JwtModule.register({
       secret: envConfig.jwt.secret || 'default-secret-change-this',
-      signOptions: { 
+      signOptions: {
         expiresIn: (envConfig.jwt.expiresIn || '7d') as any,
       },
     }),
   ],
   controllers: [UserController],
-  providers: [
-    SignupService,
-    LoginService,
-    UpdateProfileService,
-    JwtStrategy,
-  ],
+  providers: [SignupService, LoginService, UpdateProfileService, JwtStrategy],
   exports: [SignupService, LoginService, UpdateProfileService],
 })
 export class UserModule {}

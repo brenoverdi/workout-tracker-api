@@ -1,0 +1,70 @@
+### ONLY FOR DEVELOPMENT AND LOCAL USE ###
+
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: workout-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: workout_user
+      POSTGRES_PASSWORD: workout_pass
+      POSTGRES_DB: workout_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - workout-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: workout-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    networks:
+      - workout-net
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.0
+    container_name: workout-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - xpack.security.http.ssl.enabled=false
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    networks:
+      - workout-net
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.15.0
+    container_name: workout-kibana
+    depends_on:
+      - elasticsearch
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    networks:
+      - workout-net
+
+networks:
+  workout-net:
+
+volumes:
+  postgres_data:
+  redis_data:
+  es_data:

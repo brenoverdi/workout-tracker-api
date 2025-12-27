@@ -1,4 +1,13 @@
-import { IsEmail, IsNotEmpty, IsString, IsOptional, IsEnum, IsNumber, Min, Max } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  IsOptional,
+  IsEnum,
+  IsNumber,
+  Min,
+  Max,
+} from 'class-validator';
 import { IsStrongPassword } from '../../utils/validation.util';
 import { ExperienceLevel, Gender } from './model';
 
@@ -13,7 +22,11 @@ export class SignupDto {
 
   @IsString()
   @IsOptional()
-  name?: string;
+  firstName?: string;
+
+  @IsString()
+  @IsOptional()
+  surname?: string;
 }
 
 export class LoginDto {
@@ -29,7 +42,11 @@ export class LoginDto {
 export class UpdateProfileDto {
   @IsString()
   @IsOptional()
-  name?: string;
+  firstName?: string;
+
+  @IsString()
+  @IsOptional()
+  surname?: string;
 
   @IsNumber()
   @Min(10)
@@ -56,4 +73,8 @@ export class UpdateProfileDto {
   @IsEnum(ExperienceLevel)
   @IsOptional()
   experienceLevel?: ExperienceLevel;
+
+  @IsString()
+  @IsOptional()
+  frequencyExercise?: string;
 }

@@ -11,7 +11,10 @@ export class UpdateProfileService {
     private userRepository: Repository<User>,
   ) {}
 
-  async execute(userId: string, updateProfileDto: UpdateProfileDto): Promise<Partial<User>> {
+  async execute(
+    userId: string,
+    updateProfileDto: UpdateProfileDto,
+  ): Promise<Partial<User>> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
     });

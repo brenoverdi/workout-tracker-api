@@ -9,7 +9,7 @@ const envConfig = config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  
+
   // Get logger service
   const logger = app.get(LoggerService);
   logger.setContext('Bootstrap');
@@ -34,8 +34,10 @@ async function bootstrap() {
 
   const port = envConfig.port;
   await app.listen(port);
-  
-  logger.log(`Application is running on: http://localhost:${port}/${envConfig.apiPrefix}`);
+
+  logger.log(
+    `Application is running on: http://localhost:${port}/${envConfig.apiPrefix}`,
+  );
 }
 
 bootstrap();

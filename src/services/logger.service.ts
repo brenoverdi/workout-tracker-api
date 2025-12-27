@@ -43,7 +43,7 @@ export class LoggerService implements NestLoggerService {
   ) {
     const timestamp = new Date().toISOString();
     const ctx = context || this.context || 'Application';
-    
+
     const logObject = {
       timestamp,
       level,
@@ -73,10 +73,12 @@ export class LoggerService implements NestLoggerService {
     this.log(`${method} ${url}${userId ? ` - User: ${userId}` : ''}`, 'HTTP');
   }
 
-  logResponse(method: string, url: string, statusCode: number, duration: number) {
-    this.log(
-      `${method} ${url} - ${statusCode} - ${duration}ms`,
-      'HTTP',
-    );
+  logResponse(
+    method: string,
+    url: string,
+    statusCode: number,
+    duration: number,
+  ) {
+    this.log(`${method} ${url} - ${statusCode} - ${duration}ms`, 'HTTP');
   }
 }

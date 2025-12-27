@@ -5,7 +5,7 @@ import {
 } from 'class-validator';
 
 export function IsStrongPassword(validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string) {
+  return function (object: object, propertyName: string) {
     registerDecorator({
       name: 'isStrongPassword',
       target: object.constructor,
@@ -14,7 +14,7 @@ export function IsStrongPassword(validationOptions?: ValidationOptions) {
       validator: {
         validate(value: any, args: ValidationArguments) {
           if (typeof value !== 'string') return false;
-          
+
           // At least 8 characters, 1 uppercase, 1 lowercase, 1 number
           const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
           return strongPasswordRegex.test(value);
@@ -28,7 +28,7 @@ export function IsStrongPassword(validationOptions?: ValidationOptions) {
 }
 
 export function IsPositiveNumber(validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string) {
+  return function (object: object, propertyName: string) {
     registerDecorator({
       name: 'isPositiveNumber',
       target: object.constructor,
@@ -53,7 +53,8 @@ export class ValidationUtil {
   }
 
   static isValidUUID(uuid: string): boolean {
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const uuidRegex =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     return uuidRegex.test(uuid);
   }
 

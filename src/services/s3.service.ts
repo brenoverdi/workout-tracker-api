@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+  DeleteObjectCommand,
+} from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { awsConfig } from '../config/aws.config';
 import { v4 as uuidv4 } from 'uuid';
@@ -10,7 +15,10 @@ export class S3Service {
   private bucketName: string;
 
   constructor() {
-    if (!awsConfig.credentials.accessKeyId || !awsConfig.credentials.secretAccessKey) {
+    if (
+      !awsConfig.credentials.accessKeyId ||
+      !awsConfig.credentials.secretAccessKey
+    ) {
       throw new Error('AWS credentials are not properly configured');
     }
 
@@ -77,7 +85,7 @@ export class S3Service {
 
     const response = await this.s3Client.send(command);
     const stream = response.Body as any;
-    
+
     return new Promise((resolve, reject) => {
       const chunks: any[] = [];
       stream.on('data', (chunk: any) => chunks.push(chunk));
